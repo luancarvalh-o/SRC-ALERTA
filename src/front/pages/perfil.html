@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alerta Betim – Meu Perfil</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/inicio.css">
+  <style>
+    .profile-main { max-width: 1200px; margin: 0 auto; padding: 55px 20px; text-align: left; }
+    .profile-grid { display: grid; grid-template-columns: 300px 1fr; gap: 30px; }
+    .profile-page .card { padding: 24px; margin-bottom: 20px; background: #090018; border: 1px solid #3b0a5a; border-radius: 16px; }
+    .profile-page.light .card { background: white; border-color: #e2cfff; }
+    .avatar-wrap { text-align: center; margin-bottom: 20px; }
+    .avatar-ring { width: 100px; height: 100px; margin: 0 auto; display: flex; align-items: center; justify-content: center; color: white; background: linear-gradient(135deg, #7927cb, #0e9cb8); border-radius: 50%; font-size: 40px; }
+    .profile-name { margin-top: 10px; font-size: 20px; font-weight: bold; text-align: center; }
+    .profile-email { color: #888; font-size: 14px; text-align: center; }
+    .btn-logout { margin-left: 10px; }
+    .denuncias-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+    .denuncia-item { padding: 17px; background: rgba(255,255,255,.05); border: 1px solid #3b0a5a; border-radius: 10px; }
+    .profile-page.light .denuncia-item { background: #faf7fd; border-color: #e0cfef; }
+    .denuncia-item h4 { margin: 10px 0 6px; font-size: 17px; }
+    .denuncia-item p { margin: 0; color: #888; font-size: 12px; }
+    @media (max-width: 760px) {
+      .profile-grid, .denuncias-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="light app-shell profile-page">
+  <header>
+    <div class="Logo">
+      <img src="../imagens/Imagem_Logo.png" alt="Logo" width="70">
+      <div class="texto">
+        <h1>ALERTA BETIM</h1>
+        <h2>Sua voz transforma a cidade</h2>
+      </div>
+      <div class="botoes">
+        <a href="../index.html"><button type="button" class="btn btn-outline-primary">Início</button></a>
+        <a href="../index.html#mapaSecao"><button type="button" class="btn btn-outline-primary">Mapa</button></a>
+        <a href="reportar.html"><button type="button" class="btn btn-outline-primary">Reportar</button></a>
+        <a href="perfil.html"><button type="button" class="btn btn-outline-primary active">Perfil</button></a>
+        <button type="button" class="temaBtn claro btn btn-dark"><img src="../imagens/icone_sol.png" width="20" alt=""></button>
+        <button type="button" class="temaBtn escuro btn btn-dark"><img src="../imagens/icone_lua.png" width="20" alt=""></button>
+        <button class="btn-logout" id="btnLogout">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="profile-main">
+    <div class="profile-grid">
+      <aside>
+        <div class="card">
+          <div class="avatar-wrap"><div class="avatar-ring">👤</div></div>
+          <div class="profile-name" id="displayName">Carregando...</div>
+          <div class="profile-email" id="displayEmail">---</div>
+          <hr>
+          <p>📍 <span id="displayCity">---</span></p>
+          <p>📅 Membro desde: <span id="displayJoin">---</span></p>
+        </div>
+      </aside>
+      <section>
+        <div class="card">
+          <h2>Minhas denúncias</h2>
+          <div class="denuncias-grid" id="denunciasGrid"><p>Carregando...</p></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/tema.js"></script>
+  <script>
+    async function renderDenuncias() {
+      const grid = document.getElementById('denunciasGrid');
+      const denuncias = await CloudDB.getMinhasDenuncias();
+      if (!denuncias.length) {
+        grid.innerHTML = '<p>Você ainda não fez nenhuma denúncia.</p>';
+        return;
+      }
+      grid.innerHTML = denuncias.map(item => `
+        <article class="denuncia-item">
+          <span class="badge badge-cyan">${item.categoria}</span>
+          <h4>${item.titulo}</h4>
+          <p>${new Date(item.created_at).toLocaleDateString('pt-BR')} • 👍 ${item.apoios} apoios</p>
+        </article>
+      `).join('');
+    }
+
+    async function iniciarPerfil() {
+      const user = await CloudDB.getCurrentUser();
+      if (!user) {
+        location.href = 'login.html';
+        return;
+      }
+      document.getElementById('displayName').textContent = user.name;
+      document.getElementById('displayEmail').textContent = user.email;
+      document.getElementById('displayCity').textContent = `${user.city}, ${user.state}`;
+      document.getElementById('displayJoin').textContent = new Date(user.createdAt).toLocaleDateString('pt-BR');
+      await renderDenuncias();
+    }
+
+    document.getElementById('btnLogout').addEventListener('click', async () => {
+      await CloudDB.logout();
+      location.href = '../index.html';
+    });
+
+    iniciarPerfil().catch(error => {
+      document.getElementById('denunciasGrid').innerHTML = `<p>${error.message}</p>`;
+    });
+  </script>
+</body>
+</html>

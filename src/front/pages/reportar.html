@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alerta Betim – Reportar problema</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/inicio.css">
+  <link rel="stylesheet" href="../css/reportar.css">
+</head>
+<body class="light app-shell report-page">
+  <header>
+    <div class="Logo">
+      <img src="../imagens/Imagem_Logo.png" alt="Logo do Alerta Betim" width="70">
+      <div class="texto">
+        <h1>ALERTA BETIM</h1>
+        <h2>Sua voz transforma a cidade</h2>
+      </div>
+
+      <div class="botoes">
+        <a href="../index.html"><button type="button" class="btn btn-outline-primary">Início</button></a>
+        <a href="../index.html#mapaSecao"><button type="button" class="btn btn-outline-primary">Mapa</button></a>
+        <a href="reportar.html"><button type="button" class="btn btn-outline-primary active">Reportar</button></a>
+        <a href="login.html"><button type="button" class="btn btn-outline-primary" id="btnNavPerfil">Perfil</button></a>
+
+        <button type="button" class="temaBtn claro btn btn-dark" aria-label="Ativar tema claro">
+          <img src="../imagens/icone_sol.png" width="20" alt="">
+        </button>
+        <button type="button" class="temaBtn escuro btn btn-dark" aria-label="Ativar tema escuro">
+          <img src="../imagens/icone_lua.png" width="20" alt="">
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="report-main">
+    <section class="report-hero">
+      <span class="report-kicker">PARTICIPAÇÃO CIDADÃ</span>
+      <h1>Registrar <span>Problema</span></h1>
+      <p>Ajude a melhorar Betim reportando problemas urbanos na sua região.</p>
+    </section>
+
+    <form class="report-form" id="reportForm" novalidate>
+      <div class="form-grid">
+        <div class="field">
+          <label for="categoria">Tipo do problema</label>
+          <select id="categoria" required>
+            <option value="">Selecione o tipo</option>
+            <option>Trânsito</option>
+            <option>Infraestrutura</option>
+            <option>Iluminação pública</option>
+            <option>Saneamento</option>
+            <option>Acúmulo de lixo</option>
+            <option>Sinalização</option>
+            <option>Outro</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="titulo">Título</label>
+          <input id="titulo" type="text" minlength="3" maxlength="80" placeholder="Ex.: Buraco grande na Av. Amazonas" required>
+        </div>
+
+        <div class="field field-full">
+          <label for="descricao">Descrição</label>
+          <textarea id="descricao" rows="6" minlength="10" maxlength="600" placeholder="Descreva o problema em detalhes (mínimo de 10 caracteres)..." required></textarea>
+          <span class="char-count"><strong id="charCount">0</strong>/600</span>
+        </div>
+
+        <div class="field">
+          <label for="endereco">Endereço</label>
+          <input id="endereco" type="text" maxlength="120" placeholder="Rua, avenida e número" required>
+        </div>
+
+        <div class="field">
+          <label for="bairro">Bairro</label>
+          <input id="bairro" type="text" maxlength="60" placeholder="Ex.: Centro" required>
+        </div>
+
+        <div class="field field-full">
+          <label>Foto do problema <span class="optional">(opcional)</span></label>
+          <label class="upload-area" id="uploadArea" for="foto">
+            <input id="foto" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+            <div class="upload-empty" id="uploadEmpty">
+              <span class="upload-icon">⇧</span>
+              <strong>Clique ou arraste uma imagem aqui</strong>
+              <small>PNG, JPG ou WEBP de até 10 MB</small>
+            </div>
+            <div class="upload-preview" id="uploadPreview" hidden>
+              <img id="previewImage" alt="Prévia da foto selecionada">
+              <button type="button" id="removeImage" aria-label="Remover imagem">×</button>
+              <span>Clique para trocar a imagem</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-message" id="formMessage" role="alert"></div>
+      <button class="submit-report" id="submitReport" type="submit">
+        <span>➤</span> Enviar denúncia
+      </button>
+    </form>
+  </main>
+
+  <footer class="report-footer">
+    <div>
+      <img src="../imagens/Imagem_Logo.png" width="54" alt="">
+      <h1>ALERTA BETIM</h1>
+    </div>
+    <p>Plataforma de participação cidadã para reportar e acompanhar problemas urbanos em Betim, MG.</p>
+    <span>© 2026 Alerta Betim. Transformando a cidade com tecnologia e participação popular.</span>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/tema.js"></script>
+  <script src="../js/reportar.js"></script>
+</body>
+</html>

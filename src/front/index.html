@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerta Betim</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/inicio.css">
+</head>
+
+<body class="light home-page">
+
+    <header>
+        <div class="Logo">
+            <img src="imagens/Imagem_Logo.png" alt="Logo" width="70px">
+            <div class="texto">
+                <h1>ALERTA BETIM</h1>
+                <h2>Sua voz transforma a cidade</h2>
+            </div>
+
+            <div class="botoes">
+                <a href="index.html"><button type="button" class="btn btn-outline-primary active">Início</button></a>
+                <a href="#mapaSecao"><button type="button" class="btn btn-outline-primary" id="btnNavMapa">Mapa</button></a>
+                <a href="pages/reportar.html"><button type="button" class="btn btn-outline-primary">Reportar</button></a>
+                <a href="pages/login.html"><button type="button" class="btn btn-outline-primary" id="btnNavPerfil">Perfil</button></a>
+
+                <!-- BOTÃO SOL -->
+                <button type="button" class="temaBtn claro btn btn-dark">
+                    <img src="imagens/icone_sol.png" width="20px">
+                </button>
+
+                <!-- BOTÃO LUA -->
+                <button type="button" class="temaBtn escuro btn btn-dark">
+                    <img src="imagens/icone_lua.png" width="20px">
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="home-hero">
+            <div class="hero-copy">
+                <span class="hero-kicker">PARTICIPAÇÃO CIDADÃ • BETIM, MG</span>
+                <h1>Sua voz ajuda a construir uma <span>cidade melhor.</span></h1>
+                <p>Reporte problemas urbanos, acompanhe soluções e fortaleça as melhorias do seu bairro.</p>
+                <div class="hero-actions">
+                    <a href="pages/reportar.html" class="hero-primary" id="btnMainReport">＋ Reportar problema</a>
+                    <a href="#mapaSecao" class="hero-secondary">⌖ Explorar o mapa</a>
+                </div>
+            </div>
+
+            <div class="hero-visual" aria-hidden="true">
+                <div class="hero-glow"></div>
+                <div class="city-card city-card-main">
+                    <span class="city-card-icon">⌖</span>
+                    <div>
+                        <strong>Problemas perto de você</strong>
+                        <small>Acompanhe ocorrências em toda Betim</small>
+                    </div>
+                </div>
+                <div class="city-card city-card-top">
+                    <span>✓</span>
+                    <strong>Cidade participativa</strong>
+                </div>
+                <div class="city-card city-card-bottom">
+                    <span>↗</span>
+                    <strong>Resultados visíveis</strong>
+                </div>
+                <div class="hero-orbit orbit-one"></div>
+                <div class="hero-orbit orbit-two"></div>
+            </div>
+        </section>
+
+        <!-- PROBLEMAS -->
+        <div class="Problemas">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">ACONTECENDO AGORA</span>
+                    <h2>Problemas recentes</h2>
+                </div>
+                <p>Veja o que a comunidade está reportando e apoie as ocorrências que também afetam você.</p>
+            </div>
+            <div class="cardPro" id="cardsIniciais">
+                <!-- Cards serão renderizados via JS -->
+            </div>
+
+            <!-- CARROSSEL (INICIA ESCONDIDO) -->
+            <div class="carrossel-container" id="carrosselContainer" style="display:none;">
+                <div class="carrossel">
+                    <div id="cardTrack">
+                        <!-- Páginas do carrossel serão renderizadas via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="controlesCards">
+                <button id="anterior" class="btn btn-outline-secondary" style="visibility: hidden;">
+                    <img src="imagens/icone_esquerda.png" width="20px"> Anterior
+                </button>
+                <button id="toggleCards" class="btn btn-primary">▼ Mostrar mais</button>
+                <button id="proximo" class="btn btn-outline-secondary" style="visibility: hidden;">
+                    Próximo <img src="imagens/icone_direita.png" width="20px">
+                </button>
+            </div>
+        </div>
+
+        <!-- ESTATÍSTICAS -->
+        <div class="Estatísticas">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">IMPACTO COLETIVO</span>
+                    <h2>Betim em números</h2>
+                </div>
+                <p>Indicadores atualizados a partir das ocorrências e apoios da comunidade.</p>
+            </div>
+
+            <div class="cardEst">
+                <div class="BR">
+                    <button>
+                        <div class="topoCard">
+                            <h1 id="statResolvidos">0</h1>
+                            <img src="imagens/icone_check.png" width="50px">
+                        </div>
+                        <h2>Problemas Resolvidos</h2>
+                    </button>
+                </div>
+
+                <div class="BA">
+                    <button>
+                        <div class="topoCard">
+                            <h1 id="statAndamento">0</h1>
+                            <img src="imagens/icone_relogio.png" width="50px">
+                        </div>
+                        <h2>Em Andamento</h2>
+                    </button>
+                </div>
+
+                <button>
+                    <div class="topoCard">
+                        <h1 id="statTotal">0</h1>
+                        <img src="imagens/icone_exclamacao.png" width="50px">
+                    </div>
+                    <h2>Total de Reclamações</h2>
+                </button>
+
+                <button>
+                    <div class="topoCard">
+                        <h1 id="statApoios">0</h1>
+                        <h1 class="R">👍</h1>
+                    </div>
+                    <h2>Total de Apoios</h2>
+                </button>
+            </div>
+        </div>
+
+        <!-- MAPA -->
+        <div class="Mapa" id="mapaSecao">
+            <div class="map-heading">
+                <div>
+                    <span class="section-kicker">VISÃO DA CIDADE</span>
+                    <h2>Mapa de ocorrências</h2>
+                    <p>Explore os problemas reportados e clique em um marcador para ver os detalhes.</p>
+                </div>
+                <span class="map-live"><i></i> Atualizado agora</span>
+            </div>
+
+            <div class="mapa-legenda">
+                <span class="legenda-item"><span class="legenda-bolinha legenda-pendente"></span> Pendente</span>
+                <span class="legenda-item"><span class="legenda-bolinha legenda-andamento"></span> Em andamento</span>
+                <span class="legenda-item"><span class="legenda-bolinha legenda-resolvido"></span> Resolvido</span>
+            </div>
+
+            <div id="mapaLeaflet"></div>
+        </div>
+    </main>
+
+    <!-- MODAL DETALHE PROBLEMA -->
+    <div id="modalProblema" class="modal-overlay" style="display: none;">
+        <div class="modal-content-custom">
+            <div id="modalBanner" class="modal-banner">
+                <span id="modalCategoriaBadge" class="badge-categoria">Categoria</span>
+                <span id="modalStatusBadge" class="badge-status">Status</span>
+                <div id="modalBannerTitulo" class="banner-titulo">Título</div>
+                <button class="btn-fechar-modal" onclick="fecharModal()">✕</button>
+            </div>
+
+            <div class="modal-body-custom">
+                <div class="modal-info-principal">
+                    <h2 id="modalTitulo">Título do Problema</h2>
+                    <p id="modalDescricao">Descrição detalhada do problema...</p>
+                    
+                    <div class="modal-meta-grid">
+                        <div class="meta-item">📍 <span id="modalLocal">Localização</span></div>
+                        <div class="meta-item">👤 <span id="modalAutor">Autor</span></div>
+                        <div class="meta-item">📅 <span id="modalData">Data</span></div>
+                        <div class="meta-item">👍 <span id="modalApoios">0</span> apoios</div>
+                    </div>
+                </div>
+
+                <div class="modal-acoes-principais">
+                    <button class="btn-apoiar-modal" onclick="apoiarModal()">
+                        👍 Apoiar este problema <span id="modalApoiosBadge" class="apoios-badge">0</span>
+                    </button>
+                    
+                    <div class="status-container">
+                        <button class="btn-status-modal" onclick="toggleStatusModal()">
+                            🔄 Alterar Status
+                        </button>
+                        <div id="statusDropdown" class="status-dropdown" style="display: none;">
+                            <button onclick="mudarStatus('Pendente')">Pendente</button>
+                            <button onclick="mudarStatus('Em andamento')">Em andamento</button>
+                            <button onclick="mudarStatus('Resolvido')">Resolvido</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-comentarios">
+                    <h3>Comentários</h3>
+                    <div id="listaComentarios" class="lista-comentarios">
+                        <!-- Comentários aqui -->
+                    </div>
+                    <div class="novo-comentario">
+                        <input type="text" id="comentarioTexto" placeholder="Escreva um comentário...">
+                        <button onclick="enviarComentario()">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div>
+            <h1>ALERTA BETIM</h1>
+        </div>
+        <p>Plataforma de participação cidadã para reportar e acompanhar problemas urbanos em Betim, MG.</p>
+        <span>© 2026 Alerta Betim. Transformando a cidade com tecnologia e participação popular.</span>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/tema.js"></script>
+    <script>
+        // Dados Mockados Integrados
+        const problemasData = {
+            1: { id: 1, titulo: "Rua sem sinalização", desc: "Trecho sem placas e pintura de solo apagada, aumentando risco de acidentes no cruzamento.", local: "Rua Tapajós, 600 - Filadélfia", lat: -19.9696, lng: -44.1858, autor: "Beatriz Almeida", data: "23/04/2026", apoios: 14, status: "Resolvido", categoria: "Trânsito", bannerClass: "banner-transito", comentarios: [{ autor: "João Silva", texto: "Continua sem sinalização", data: "25/05/2026" }] },
+            2: { id: 2, titulo: "Iluminação pública danificada", desc: "Poste apagado há semanas deixando a rua sem iluminação à noite, causando insegurança.", local: "Av. Amazonas, 1200 - Centro", lat: -19.9673, lng: -44.1981, autor: "Carlos Mendes", data: "10/05/2026", apoios: 22, status: "Em andamento", categoria: "Infraestrutura", bannerClass: "banner-iluminacao", comentarios: [{ autor: "Maria Costa", texto: "Muito perigoso à noite", data: "20/05/2026" }] },
+            3: { id: 3, titulo: "Buraco em avenida principal", desc: "Grande buraco no asfalto causando risco de acidentes e danos em veículos que passam pelo local.", local: "Av. das Indústrias, 450 - Betim", lat: -19.9558, lng: -44.2105, autor: "Marcos Lima", data: "05/05/2026", apoios: 37, status: "Pendente", categoria: "Trânsito", bannerClass: "banner-buraco", comentarios: [] },
+            4: { id: 4, titulo: "Esgoto a céu aberto", desc: "Vazamento de esgoto na calçada espalhando mau cheiro e riscos à saúde dos moradores da área.", local: "Rua das Flores, 88 - Imbiruçu", lat: -19.9436, lng: -44.1127, autor: "Ana Paula", data: "15/05/2026", apoios: 9, status: "Pendente", categoria: "Saneamento", bannerClass: "banner-esgoto", comentarios: [] },
+            5: { id: 5, titulo: "Semáforo com defeito", desc: "Semáforo piscando em vermelho constantemente, causando engarrafamento.", local: "Cruzamento Av. JK", lat: -19.9612, lng: -44.1934, autor: "Roberto Souza", data: "01/06/2026", apoios: 18, status: "Em andamento", categoria: "Trânsito", bannerClass: "banner-transito", comentarios: [] },
+            6: { id: 6, titulo: "Calçada destruída", desc: "Calçada com buracos e lajes soltas, oferecendo risco de queda aos pedestres.", local: "Rua Bahia, 320", lat: -19.9787, lng: -44.1869, autor: "Fernanda Reis", data: "28/04/2026", apoios: 11, status: "Resolvido", categoria: "Infraestrutura", bannerClass: "banner-iluminacao", comentarios: [] },
+            7: { id: 7, titulo: "Asfalto danificado na entrada", desc: "Asfalto completamente destruído na entrada do bairro, dificultando acesso.", local: "Entrada Bairro Jardim", lat: -19.9501, lng: -44.2189, autor: "Paulo Neto", data: "12/05/2026", apoios: 29, status: "Pendente", categoria: "Trânsito", bannerClass: "banner-buraco", comentarios: [] },
+            8: { id: 8, titulo: "Acúmulo de lixo irregular", desc: "Ponto de descarte irregular de lixo atraindo animais e gerando mau cheiro.", local: "Rua dos Ipês, 55", lat: -19.9729, lng: -44.1652, autor: "Sandra Gomes", data: "08/06/2026", apoios: 6, status: "Em andamento", categoria: "Saneamento", bannerClass: "banner-esgoto", comentarios: [] }
+        };
+
+        function adaptarProblemaCloud(item) {
+            const banners = {
+                'Trânsito': 'banner-transito',
+                'Infraestrutura': 'banner-buraco',
+                'Iluminação pública': 'banner-iluminacao',
+                'Saneamento': 'banner-esgoto',
+                'Acúmulo de lixo': 'banner-esgoto',
+                'Sinalização': 'banner-transito',
+            };
+            return {
+                id: item.id,
+                titulo: item.titulo,
+                desc: item.descricao,
+                local: `${item.endereco} - ${item.bairro}`,
+                lat: item.latitude,
+                lng: item.longitude,
+                autor: item.profiles?.nome || 'Cidadão de Betim',
+                data: new Date(item.created_at).toLocaleDateString('pt-BR'),
+                apoios: item.apoios,
+                status: item.status,
+                categoria: item.categoria,
+                bannerClass: banners[item.categoria] || 'banner-buraco',
+                comentarios: item.comentarios || [],
+                imagem: item.imagem_url,
+                criadoEm: new Date(item.created_at).getTime(),
+                cloud: true,
+            };
+        }
+
+        async function carregarProblemasCloud() {
+            const itens = await CloudDB.getProblemas();
+            itens.forEach(item => {
+                problemasData[item.id] = adaptarProblemaCloud(item);
+            });
+        }
+
+        let modalAtual = null;
+
+        function renderCards() {
+            const grid = document.getElementById('cardsIniciais');
+            const track = document.getElementById('cardTrack');
+            grid.innerHTML = '';
+            track.innerHTML = '';
+
+            const ids = Object.keys(problemasData).sort((a, b) => {
+                return (problemasData[b].criadoEm || 0) - (problemasData[a].criadoEm || 0);
+            });
+            
+            // Primeiros 4 no grid inicial
+            ids.slice(0, 4).forEach(id => {
+                grid.appendChild(createCard(problemasData[id]));
+            });
+
+            // Carrossel com páginas de 12 (aqui temos apenas 8 total, então será uma página)
+            const cardsPorPagina = 12;
+            for (let i = 0; i < ids.length; i += cardsPorPagina) {
+                const pagina = document.createElement("div");
+                pagina.classList.add("pagina");
+                ids.slice(i, i + cardsPorPagina).forEach(id => {
+                    pagina.appendChild(createCard(problemasData[id]));
+                });
+                track.appendChild(pagina);
+            }
+        }
+
+        function createCard(p) {
+            const card = document.createElement('div');
+            card.className = 'card cardProblema';
+            card.dataset.id = p.id;
+            card.style.width = '18rem';
+            card.style.cursor = 'pointer';
+            
+            card.innerHTML = `
+                <div class="card-banner ${p.bannerClass}">
+                    <span class="badge-categoria ${getBadgeCategoriaClass(p.categoria)}">${p.categoria}</span>
+                    <span class="badge-status ${getBadgeStatusClass(p.status)}">${p.status}</span>
+                    <div class="banner-titulo">${p.categoria}</div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">${p.titulo}</h5>
+                    <p class="card-text">${p.desc}</p>
+                    <div class="card-meta">
+                        <span>📍 ${p.local}</span>
+                        <span>👤 ${p.autor}</span>
+                        <span>📅 ${p.data}</span>
+                        <span>👍 ${p.apoios} apoios</span>
+                    </div>
+                    <div class="card-acoes">
+                        <button class="btn-apoiar" onclick="apoiar(event, ${p.id})">👍 Apoiar este problema <span class="apoios-badge">${p.apoios}</span></button>
+                        <button class="btn-status" onclick="abrirStatus(event, ${p.id})">🔄 Alterar Status</button>
+                    </div>
+                </div>
+            `;
+
+            if (p.imagem) {
+                const banner = card.querySelector('.card-banner');
+                banner.classList.add('tem-foto');
+                banner.style.backgroundImage = `linear-gradient(rgba(9, 0, 24, .25), rgba(9, 0, 24, .72)), url("${p.imagem}")`;
+            }
+            
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.btn-apoiar') || e.target.closest('.btn-status')) return;
+                abrirModal(p.id);
+            });
+            
+            return card;
+        }
+
+        function getBadgeCategoriaClass(cat) {
+            const map = { 'Trânsito': 'badge-transito', 'Infraestrutura': 'badge-infra', 'Saneamento': 'badge-saneamento' };
+            return map[cat] || 'badge-transito';
+        }
+
+        function getBadgeStatusClass(status) {
+            const map = { 'Resolvido': 'badge-resolvido', 'Em andamento': 'badge-andamento', 'Pendente': 'badge-pendente' };
+            return map[status] || 'badge-pendente';
+        }
+
+        function abrirModal(id) {
+            const p = problemasData[id];
+            modalAtual = id;
+
+            document.getElementById('modalTitulo').textContent = p.titulo;
+            document.getElementById('modalDescricao').textContent = p.desc;
+            document.getElementById('modalLocal').textContent = p.local;
+            document.getElementById('modalAutor').textContent = p.autor;
+            document.getElementById('modalData').textContent = p.data;
+            document.getElementById('modalApoios').textContent = p.apoios;
+            document.getElementById('modalApoiosBadge').textContent = p.apoios;
+            document.getElementById('modalBannerTitulo').textContent = p.categoria;
+
+            const banner = document.getElementById('modalBanner');
+            banner.className = 'modal-banner ' + p.bannerClass;
+            banner.style.backgroundImage = '';
+            if (p.imagem) {
+                banner.classList.add('tem-foto');
+                banner.style.backgroundImage = `linear-gradient(rgba(9, 0, 24, .2), rgba(9, 0, 24, .72)), url("${p.imagem}")`;
+            }
+
+            const catBadge = document.getElementById('modalCategoriaBadge');
+            catBadge.textContent = p.categoria;
+            catBadge.className = 'badge-categoria ' + getBadgeCategoriaClass(p.categoria);
+
+            const stBadge = document.getElementById('modalStatusBadge');
+            stBadge.textContent = p.status;
+            stBadge.className = 'badge-status ' + getBadgeStatusClass(p.status);
+
+            renderComentarios(id);
+            document.getElementById('statusDropdown').style.display = 'none';
+            document.getElementById('modalProblema').style.display = 'flex';
+        }
+
+        function fecharModal() {
+            document.getElementById('modalProblema').style.display = 'none';
+            modalAtual = null;
+        }
+
+        async function apoiar(event, id) {
+            event.stopPropagation();
+            problemasData[id].apoios++;
+            if (problemasData[id].cloud) {
+                await CloudDB.atualizarProblema(id, { apoios: problemasData[id].apoios });
+            }
+            renderCards();
+            atualizarEstatisticas();
+            renderMapa();
+        }
+
+        async function apoiarModal() {
+            if (!modalAtual) return;
+            problemasData[modalAtual].apoios++;
+            const n = problemasData[modalAtual].apoios;
+            if (problemasData[modalAtual].cloud) {
+                await CloudDB.atualizarProblema(modalAtual, { apoios: n });
+            }
+            document.getElementById('modalApoios').textContent = n;
+            document.getElementById('modalApoiosBadge').textContent = n;
+            renderCards();
+            atualizarEstatisticas();
+            renderMapa();
+        }
+
+        function abrirStatus(event, id) {
+            event.stopPropagation();
+            abrirModal(id);
+            setTimeout(() => {
+                document.getElementById('statusDropdown').style.display = 'block';
+            }, 100);
+        }
+
+        function toggleStatusModal() {
+            const dd = document.getElementById('statusDropdown');
+            dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function mudarStatus(novoStatus) {
+            if (!modalAtual) return;
+            problemasData[modalAtual].status = novoStatus;
+            if (problemasData[modalAtual].cloud) {
+                await CloudDB.atualizarProblema(modalAtual, { status: novoStatus });
+            }
+            abrirModal(modalAtual); // Atualiza modal
+            renderCards();
+            atualizarEstatisticas();
+            renderMapa();
+        }
+
+        function atualizarEstatisticas() {
+            const vals = Object.values(problemasData);
+            const total = vals.length;
+            const resolvidos = vals.filter(p => p.status === 'Resolvido').length;
+            const andamento = vals.filter(p => p.status === 'Em andamento').length;
+            const totalApoios = vals.reduce((acc, p) => acc + p.apoios, 0);
+
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statResolvidos').textContent = resolvidos;
+            document.getElementById('statAndamento').textContent = andamento;
+            document.getElementById('statApoios').textContent = totalApoios;
+        }
+
+        function renderComentarios(id) {
+            const lista = document.getElementById('listaComentarios');
+            lista.innerHTML = '';
+            const comentarios = problemasData[id].comentarios;
+            if (comentarios.length === 0) {
+                lista.innerHTML = '<p class="sem-comentarios">Nenhum comentário ainda. Seja o primeiro!</p>';
+                return;
+            }
+            comentarios.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'comentario-item';
+                div.innerHTML = `<strong>${c.autor}</strong><p>${c.texto}</p><small>${c.data}</small>`;
+                lista.appendChild(div);
+            });
+        }
+
+        async function enviarComentario() {
+            if (!modalAtual) return;
+            const input = document.getElementById('comentarioTexto');
+            const texto = input.value.trim();
+            if (!texto) return;
+            const hoje = new Date().toLocaleDateString('pt-BR');
+            problemasData[modalAtual].comentarios.push({ autor: "Você", texto, data: hoje });
+            if (problemasData[modalAtual].cloud) {
+                await CloudDB.atualizarProblema(modalAtual, {
+                    comentarios: problemasData[modalAtual].comentarios
+                });
+            }
+            renderComentarios(modalAtual);
+            input.value = '';
+        }
+
+        // Carrossel Logic
+        const toggleCardsBtn = document.getElementById("toggleCards");
+        const cardsIniciais = document.getElementById("cardsIniciais");
+        const carrosselContainer = document.getElementById("carrosselContainer");
+        const btnAnterior = document.getElementById("anterior");
+        const btnProximo = document.getElementById("proximo");
+        const track = document.getElementById("cardTrack");
+
+        let expandido = false;
+        let paginaAtual = 0;
+
+        function atualizarCarrossel() {
+            track.style.transform = `translateX(-${paginaAtual * 100}%)`;
+            btnAnterior.style.visibility = paginaAtual === 0 ? "hidden" : "visible";
+            const paginas = document.querySelectorAll(".pagina");
+            btnProximo.style.visibility = (paginas.length === 0 || paginaAtual === paginas.length - 1) ? "hidden" : "visible";
+        }
+
+        toggleCardsBtn.addEventListener("click", () => {
+            expandido = !expandido;
+            if (expandido) {
+                cardsIniciais.style.display = "none";
+                carrosselContainer.style.display = "flex";
+                btnAnterior.style.display = "inline-block";
+                btnProximo.style.display = "inline-block";
+                paginaAtual = 0;
+                atualizarCarrossel();
+                toggleCardsBtn.innerHTML = "▲ Mostrar menos";
+            } else {
+                cardsIniciais.style.display = "flex";
+                carrosselContainer.style.display = "none";
+                btnAnterior.style.display = "none";
+                btnProximo.style.display = "none";
+                toggleCardsBtn.innerHTML = "▼ Mostrar mais";
+            }
+        });
+
+        btnAnterior.addEventListener("click", () => {
+            if (paginaAtual > 0) {
+                paginaAtual--;
+                atualizarCarrossel();
+            }
+        });
+
+        btnProximo.addEventListener("click", () => {
+            const paginas = document.querySelectorAll(".pagina");
+            if (paginaAtual < paginas.length - 1) {
+                paginaAtual++;
+                atualizarCarrossel();
+            }
+        });
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', async () => {
+            const session = await CloudDB.getSession();
+            if (session) {
+                document.getElementById('btnNavPerfil').textContent = 'Meu Perfil';
+                document.getElementById('btnNavPerfil').parentElement.href = 'pages/perfil.html';
+            }
+            try {
+                await carregarProblemasCloud();
+            } catch (error) {
+                console.error('Não foi possível carregar os problemas do banco:', error);
+            }
+            renderCards();
+            atualizarEstatisticas();
+            renderMapa();
+        });
+    </script>
+
+    <!-- LEAFLET (Mapa Interativo) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        let mapaBetim = null;
+        let marcadores = [];
+
+        const corPorStatus = {
+            'Pendente':     '#6b7280',
+            'Em andamento': '#f59e0b',
+            'Resolvido':    '#1aad6e',
+        };
+
+        function criarIconeStatus(status) {
+            const cor = corPorStatus[status] || '#6b7280';
+            return L.divIcon({
+                className: 'marcador-problema',
+                html: `<div style="
+                    width: 22px; height: 22px;
+                    background: ${cor};
+                    border: 3px solid white;
+                    border-radius: 50%;
+                    box-shadow: 0 0 6px rgba(0,0,0,0.5);
+                "></div>`,
+                iconSize: [22, 22],
+                iconAnchor: [11, 11],
+            });
+        }
+
+        function renderMapa() {
+            if (!mapaBetim) {
+                mapaBetim = L.map('mapaLeaflet').setView([-19.9673, -44.1981], 12.5);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                    maxZoom: 19,
+                }).addTo(mapaBetim);
+            }
+
+            // Remove marcadores antigos antes de redesenhar (status pode ter mudado)
+            marcadores.forEach(m => mapaBetim.removeLayer(m));
+            marcadores = [];
+
+            Object.values(problemasData).forEach(p => {
+                if (typeof p.lat !== 'number' || typeof p.lng !== 'number') return;
+
+                const marker = L.marker([p.lat, p.lng], { icon: criarIconeStatus(p.status) }).addTo(mapaBetim);
+
+                marker.bindPopup(`
+                    <div class="popup-problema">
+                        <strong>${p.titulo}</strong><br>
+                        <span class="popup-categoria">${p.categoria}</span> ·
+                        <span class="popup-status">${p.status}</span><br>
+                        📍 ${p.local}<br>
+                        👍 ${p.apoios} apoios
+                        <br><button class="popup-btn-detalhes" onclick="fecharPopupEAbrirModal(${p.id})">Ver detalhes</button>
+                    </div>
+                `);
+
+                marcadores.push(marker);
+            });
+
+            setTimeout(() => mapaBetim.invalidateSize(), 200);
+        }
+
+        function fecharPopupEAbrirModal(id) {
+            if (mapaBetim) mapaBetim.closePopup();
+            abrirModal(id);
+        }
+
+        // Garante que o mapa redesenhe corretamente ao ser exibido via scroll
+        document.getElementById('btnNavMapa').addEventListener('click', () => {
+            setTimeout(() => {
+                if (mapaBetim) mapaBetim.invalidateSize();
+            }, 400);
+        });
+    </script>
+</body>
+</html>

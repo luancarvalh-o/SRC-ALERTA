@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alerta Betim – Cadastro</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/inicio.css"/>
+  <style>
+    .auth-wrapper { min-height: 100vh; display: flex; flex-direction: column; }
+    .auth-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+    .auth-container { width: 100%; max-width: 450px; }
+    .auth-card { background: #090018; border: 1px solid #3b0a5a; border-radius: 14px; padding: 2rem; }
+    body.light .auth-card { background: white; border-color: #e2cfff; }
+    .auth-header { text-align: center; margin-bottom: 1.5rem; }
+    .auth-form .form-group { margin-bottom: 1rem; }
+    .auth-form label { display: block; font-size: 12px; font-weight: bold; color: #aaa; margin-bottom: 5px; }
+    .auth-form input { width: 100%; background: #0b0220; border: 1px solid #3b0a5a; border-radius: 6px; color: white; padding: 10px; }
+    body.light .auth-form input { background: white; border-color: #d9c3ff; color: #222; }
+    .btn-auth { width: 100%; padding: 12px; background: linear-gradient(135deg, #7927cb, #0e9cb8); border: none; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer; }
+    .error-msg { color: #ef4444; font-size: 13px; margin-bottom: 10px; display: none; }
+  </style>
+</head>
+<body class="light app-shell auth-page">
+  <div class="auth-wrapper">
+    <header>
+      <div class="Logo">
+        <img src="../imagens/Imagem_Logo.png" alt="Logo" width="70px">
+        <div class="texto">
+          <h1>ALERTA BETIM</h1>
+          <h2>Sua voz transforma a cidade</h2>
+        </div>
+        <div class="botoes">
+          <a href="../index.html"><button type="button" class="btn btn-outline-primary">Início</button></a>
+          <a href="../index.html#mapaSecao"><button type="button" class="btn btn-outline-primary">Mapa</button></a>
+          <a href="reportar.html"><button type="button" class="btn btn-outline-primary">Reportar</button></a>
+          <a href="login.html"><button type="button" class="btn btn-outline-primary active">Perfil</button></a>
+
+          <!-- BOTÃO SOL -->
+          <button type="button" class="temaBtn claro btn btn-dark">
+            <img src="../imagens/icone_sol.png" width="20px">
+          </button>
+
+          <!-- BOTÃO LUA -->
+          <button type="button" class="temaBtn escuro btn btn-dark">
+            <img src="../imagens/icone_lua.png" width="20px">
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="auth-main">
+      <div class="auth-container">
+        <div class="auth-card">
+          <div class="auth-header"><h2>Criar Conta</h2><p>Junte-se a nós para melhorar Betim</p></div>
+          <div class="error-msg" id="errorMsg"></div>
+          <div class="auth-form">
+            <div class="form-group"><label>Nome</label><input type="text" id="inputName" placeholder="Seu nome"/></div>
+            <div class="form-group"><label>E-mail</label><input type="email" id="inputEmail" placeholder="seu@email.com"/></div>
+            <div class="form-group"><label>Senha</label><input type="password" id="inputPassword" placeholder="••••••••"/></div>
+            <button class="btn-auth" id="btnRegister">Cadastrar</button>
+          </div>
+          <div style="text-align: center; margin-top: 15px; font-size: 13px;">
+            Já tem conta? <a href="login.html" style="color: #0e9cb8; font-weight: bold; text-decoration: none;">Entrar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase.js"></script>
+  <script src="../js/tema.js"></script>
+  <script>
+    document.getElementById('btnRegister').addEventListener('click', async () => {
+      const name = document.getElementById('inputName').value.trim();
+      const email = document.getElementById('inputEmail').value.trim();
+      const password = document.getElementById('inputPassword').value;
+      const errEl = document.getElementById('errorMsg');
+
+      if (!name || !email || !password) {
+        errEl.textContent = 'Preencha todos os campos.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        const result = await CloudDB.register({ name, email, password });
+        if (result.session) {
+          location.href = 'perfil.html';
+        } else {
+          errEl.textContent = 'Cadastro criado. Confirme o e-mail antes de entrar.';
+          errEl.style.display = 'block';
+        }
+      } catch (error) {
+        errEl.textContent = error.message || 'Não foi possível criar a conta.';
+        errEl.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
